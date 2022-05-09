@@ -15,19 +15,19 @@ const resolvers = {
     },
 
     // get a single user by either their id or their username
-    user: async (parent, { user = null, params }, res) => {
-      const foundUser = await User.findOne({
-        $or: [
-          { _id: user ? user._id : params.id },
-          { username: params.username },
-        ],
-      }).populate("savedBooks");
+    me: async (parent, { username }, context) => {
+      if (context.user) {
+        const foundUser = await User.findOne({
+          $or: [{ username: username }, { _id: context.user._id }],
+        }).populate("savedBooks");
 
-      if (!foundUser) {
-        throw new AuthenticationError("Cannot find a user with this id!");
+        if (!foundUser) {
+          throw new AuthenticationError("Cannot find a user with this id!");
+        }
+
+        return foundUser;
       }
-
-      return foundUser;
+      throw new AuthenticationError("You must be logged in!");
     },
   },
 
@@ -55,16 +55,16 @@ const resolvers = {
 
     // create a user
     createUser: async (parent, args) => {
-        const user = await User.create(args);
-        const token = signToken(user);
-        return { token, user };
+      const user = await User.create(args);
+      const token = signToken(user);
+      return { token, user };
     },
 
     // save a book to a user's `savedBooks` field by adding it to the set (to prevent duplicates)
     saveBook: async (parent, args, context) => {
       if (context.user) {
         const updatedUser = await User.findOneAndUpdate(
-          { _id: "6278550885a86b1df0c00e5b" },
+          { _id: context.user._id },
           { $addToSet: { savedBooks: args } },
           { new: true }
         );

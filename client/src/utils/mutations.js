@@ -51,3 +51,13 @@ export const SAVE_BOOK = gql`
     }
   }
 `;
+
+// Delete book
+export const DELETE_BOOK = gql`
+  mutation deleteBook($bookId: String!) {
+    deleteBook(bookId: $bookId) {
+      _id
+      title
+    }
+  }
+`;

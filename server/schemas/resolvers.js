@@ -49,7 +49,6 @@ const resolvers = {
       }
 
       const token = signToken(user);
-      console.log(token, user);
       return { token, user };
     },
 
@@ -87,7 +86,7 @@ const resolvers = {
           { new: true }
         );
         if (!updatedUser) {
-          return res.status(400).json({ message: "Something is wrong!" });
+          throw new AuthenticationError("Something went wrong");
         }
         res.json(updatedUser);
       }

@@ -20,7 +20,7 @@ const SearchBooks = () => {
   const [saveMyBook, { error }] = useMutation(SAVE_BOOK, {
     update(cache, { data: { saveBook } }) {
       try {
-        const { me } = cache.readQuery({ query: QUERY_ME });
+        const { me } = cache.readQuery({ query: QUERY_ME }) || {};
         // if the book is already saved, don't save it again
         if (me.savedBooks.find((book) => book.bookId === saveBook.bookId)) {
           return;
@@ -50,7 +50,7 @@ const SearchBooks = () => {
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
   useEffect(() => {
-    // return () => saveBookIds(savedBookIds);
+    saveBookIds(savedBookIds);
   });
 
   // create method to search for books and set state on form submit
@@ -99,10 +99,12 @@ const SearchBooks = () => {
     };
 
     try {
-      await saveMyBook({
+      const books = await saveMyBook({
         variables: bookData,
       });
-      setSavedBookIds([...savedBookIds, bookId]);
+      if (books) {
+        setSavedBookIds([...savedBookIds, bookId]);
+      }
     } catch (err) {
       console.error(err);
     }

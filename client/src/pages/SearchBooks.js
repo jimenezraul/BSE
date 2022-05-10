@@ -21,6 +21,10 @@ const SearchBooks = () => {
     update(cache, { data: { saveBook } }) {
       try {
         const { me } = cache.readQuery({ query: QUERY_ME });
+        // if the book is already saved, don't save it again
+        if (me.savedBooks.find((book) => book.bookId === saveBook.bookId)) {
+          return;
+        }
         cache.writeQuery({
           query: QUERY_ME,
           data: {

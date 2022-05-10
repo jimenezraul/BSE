@@ -62,13 +62,14 @@ const resolvers = {
     // save a book to a user's `savedBooks` field by adding it to the set (to prevent duplicates)
     saveBook: async (parent, args, context) => {
       if (context.user) {
-        const updatedUser = await User.findOneAndUpdate(
-          { _id: context.user._id },
-          { $addToSet: { savedBooks: args } },
-          { new: true }
-        );
+        const user = await User.findById(context.user._id);
+        if (user.savedBooks.filter((book) => book.bookId === args.bookId).length > 0) {
+          throw new Error("You already saved this book!");
+        }
+        user.savedBooks.addToSet(args);
+        await user.save();
 
-        return updatedUser.savedBooks[updatedUser.savedBooks.length - 1];
+        return user.savedBooks.filter((book) => book.bookId === args.bookId)[0];
       }
       throw new AuthenticationError("You must be logged in to save a book");
     },

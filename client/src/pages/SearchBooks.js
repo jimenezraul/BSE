@@ -15,6 +15,7 @@ import { saveBookIds, getSavedBookIds } from "../utils/localStorage";
 import { QUERY_ME } from "../utils/queries";
 import { useMutation } from "@apollo/client";
 import { SAVE_BOOK } from "../utils/mutations";
+import { getLink } from "../utils/helper";
 
 const SearchBooks = () => {
   const [saveMyBook, { error }] = useMutation(SAVE_BOOK, {
@@ -75,7 +76,7 @@ const SearchBooks = () => {
         authors: book.volumeInfo.authors || ["No author to display"],
         title: book.volumeInfo.title,
         description: book.volumeInfo.description,
-        image: book.volumeInfo.imageLinks?.thumbnail || "",
+        image: getLink(book.volumeInfo.imageLinks?.thumbnail) || "",
       }));
       setSearchedBooks(bookData);
       setSearchInput("");

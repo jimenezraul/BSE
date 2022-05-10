@@ -19,18 +19,3 @@ export const QUERY_ME = gql`
     }
   }
 `;
-
-// Query ME books
-export const QUERY_ME_BOOKS = gql`
-query Query {
-  books {
-    _id
-    title
-    authors
-    description
-    bookId
-    image
-    link
-  }
-}
-`;

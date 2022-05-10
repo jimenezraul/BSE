@@ -12,10 +12,10 @@ After signing up, you can save your favorite books and view them in your profile
   - [Technologies Used](#technologies-used)
   - [Screenshots](#screenshots)
   - [Installation](#installation)
+  - [Deployment](#deployment)
   - [Questions?](#questions)
--
 
-## Click [here](https://limitless-citadel-36819.herokuapp.com/) to for a live demo.
+## Click [here](https://stormy-bastion-88143.herokuapp.com) to for a live demo.
 
 ## Technologies Used
 
@@ -29,7 +29,9 @@ After signing up, you can save your favorite books and view them in your profile
 
 ## Screenshots
 
-- [Screenshot 1](./screenshots/screenshot1.png)
+![Screenshot 1](./img/search.png)
+![Screenshot 2](./img/search-saved.png)
+![Screenshot 3](./img/profile.png)
 
 ## Installation
 
@@ -39,6 +41,10 @@ cd BSE
 npm install
 npm run develop
 ```
+
+## Deployment
+
+Heroku deployment: [Live Demo](https://stormy-bastion-88143.herokuapp.com)
 
 ## Questions?
 

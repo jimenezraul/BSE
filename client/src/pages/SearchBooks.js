@@ -102,6 +102,7 @@ const SearchBooks = () => {
       await saveMyBook({
         variables: bookData,
       });
+      setSavedBookIds([...savedBookIds, bookId]);
     } catch (err) {
       console.error(err);
     }
@@ -166,7 +167,7 @@ const SearchBooks = () => {
                       {savedBookIds?.some(
                         (savedBookId) => savedBookId === book.bookId
                       )
-                        ? "This book has already been saved!"
+                        ? "Book Already Saved!"
                         : "Save this Book!"}
                     </Button>
                   )}

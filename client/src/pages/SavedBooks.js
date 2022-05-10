@@ -12,6 +12,7 @@ import { useQuery } from "@apollo/client";
 import { QUERY_ME } from "../utils/queries";
 import { useMutation } from "@apollo/client";
 import { DELETE_BOOK } from "../utils/mutations";
+import { saveBookIds } from "../utils/localStorage";
 
 const SavedBooks = () => {
   const [deleteBook, { error }] = useMutation(DELETE_BOOK);
@@ -37,12 +38,16 @@ const SavedBooks = () => {
           data: {
             me: {
               ...me,
-              savedBooks: me.savedBooks.filter((book) => book.bookId !== bookId),
+              savedBooks: me.savedBooks.filter(
+                (book) => book.bookId !== bookId
+              ),
             },
           },
         });
       },
     });
+    // remove book from localStorage
+    removeBookId(bookId);
   };
 
   // if data isn't here yet, say so

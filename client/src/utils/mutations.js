@@ -48,6 +48,11 @@ export const SAVE_BOOK = gql`
     ) {
       _id
       title
+      authors
+      bookId
+      image
+      link
+      description
     }
   }
 `;
@@ -58,6 +63,11 @@ export const DELETE_BOOK = gql`
     deleteBook(bookId: $bookId) {
       _id
       title
+      authors
+      description
+      bookId
+      image
+      link
     }
   }
 `;

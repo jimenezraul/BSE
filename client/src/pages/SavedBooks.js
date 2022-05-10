@@ -7,8 +7,6 @@ import {
   Button,
 } from "react-bootstrap";
 
-import { deleteBook } from "../utils/API";
-import Auth from "../utils/auth";
 import { removeBookId } from "../utils/localStorage";
 import { useQuery } from "@apollo/client";
 import { QUERY_ME } from "../utils/queries";
@@ -19,7 +17,6 @@ const SavedBooks = () => {
   const [deleteBook, { error }] = useMutation(DELETE_BOOK);
   const [userData, setUserData] = useState({ savedBooks: [] });
   const { loading, data } = useQuery(QUERY_ME);
-
   useEffect(() => {
     if (data) {
       setUserData(data.me);
@@ -28,16 +25,24 @@ const SavedBooks = () => {
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
-      const response = await deleteBook({
-        variables: {
-          bookId,
-        },
-      });
-
-      const updatedUser = response;
-      setUserData(updatedUser);
-      // upon success, remove book's id from localStorage
-      removeBookId(bookId);
+    await deleteBook({
+      variables: {
+        bookId,
+      },
+      // update cache after mutation
+      update(cache, { data }) {
+        const { me } = cache.readQuery({ query: QUERY_ME });
+        cache.writeQuery({
+          query: QUERY_ME,
+          data: {
+            me: {
+              ...me,
+              savedBooks: me.savedBooks.filter((book) => book.bookId !== bookId),
+            },
+          },
+        });
+      },
+    });
   };
 
   // if data isn't here yet, say so
@@ -45,7 +50,6 @@ const SavedBooks = () => {
     return <h2>LOADING...</h2>;
   }
 
-  console.log(userData);
   return (
     <>
       <Jumbotron fluid className="text-light bg-dark">

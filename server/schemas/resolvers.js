@@ -19,7 +19,7 @@ const resolvers = {
       if (context.user) {
         const foundUser = await User.findOne({
           $or: [{ username: username }, { _id: context.user._id }],
-        }).populate("savedBooks");
+        });
 
         if (!foundUser) {
           throw new AuthenticationError("Cannot find a user with this id!");
@@ -68,11 +68,7 @@ const resolvers = {
           { new: true }
         );
 
-        if (!updatedUser) {
-          throw new AuthenticationError("Something went wrong");
-        }
-
-        return updatedUser;
+        return updatedUser.savedBooks[updatedUser.savedBooks.length - 1];
       }
       throw new AuthenticationError("You must be logged in to save a book");
     },
@@ -88,7 +84,8 @@ const resolvers = {
         if (!updatedUser) {
           throw new AuthenticationError("Something went wrong");
         }
-        res.json(updatedUser);
+
+        return updatedUser;
       }
       throw new AuthenticationError("You must be logged in to delete a book");
     },
